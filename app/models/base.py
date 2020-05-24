@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 """
 @file: base.py
-@time: create by fanxl12 on 2020-05-23
+@time: create by fanxl12 on 2020-05-24
 """
 __author__ = 'fanxl12'
 from datetime import datetime
