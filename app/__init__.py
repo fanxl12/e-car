@@ -14,4 +14,16 @@ def create_app():
     # 从模块里面加载配置文件
     app.config.from_object('app.secure')
     app.config.from_object('app.setting')
+
+    register_blueprint(app)
     return app
+
+
+def register_blueprint(app):
+    """
+    注册蓝图
+    :param app:
+    :return:
+    """
+    from app.web import web
+    app.register_blueprint(web)
