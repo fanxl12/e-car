@@ -13,3 +13,4 @@ web = Blueprint('web', __name__)
 
 # 实现模块下多接口的注册
 from app.web import car
+from app.web import user
