@@ -7,8 +7,9 @@
 __author__ = 'fanxl12'
 from wtforms import StringField, PasswordField, Form
 from wtforms.validators import Length, Email, \
-    ValidationError, EqualTo
+    ValidationError
 from .base import DataRequired
+from ..models.user import User
 
 
 class EmailForm(Form):
@@ -21,22 +22,22 @@ class RegisterForm(EmailForm):
         DataRequired(), Length(2, 10, message='昵称至少需要两个字符，最多10个字符')])
 
     password = PasswordField('密码', validators=[
-        DataRequired(), Length(6, 20)])
+        DataRequired(), Length(6, 20, message='密码长度6-20之间')])
 
-    # def validate_email(self, field):
-    #     """
-    #     email的自定义校验器
-    #     :param field:
-    #     :return:
-    #     """
-    #     if User.query.filter_by(email=field.data).first():
-    #         raise ValidationError('电子邮件已被注册')
-    #
-    # def validate_nickname(self, field):
-    #     """
-    #     nickname的自定义校验器
-    #     :param field:
-    #     :return:
-    #     """
-    #     if User.query.filter_by(nickname=field.data).first():
-    #         raise ValidationError('昵称已存在')
+    def validate_email(self, field):
+        """
+        email的自定义校验器
+        :param field:
+        :return:
+        """
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError('电子邮件已被注册')
+
+    def validate_nickname(self, field):
+        """
+        nickname的自定义校验器
+        :param field:
+        :return:
+        """
+        if User.query.filter_by(nickname=field.data).first():
+            raise ValidationError('昵称已存在')

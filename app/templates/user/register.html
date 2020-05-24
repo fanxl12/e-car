@@ -8,7 +8,7 @@
     <form action="{{ url_for('web.register') }}" method="post">
         <div class="form-group">
             <label for="nickname">昵称</label>
-            <input type="email" class="form-control" id="nickname" name="nickname" placeholder="昵称"
+            <input type="text" class="form-control" id="nickname" name="nickname" placeholder="昵称"
                 value="{{ form.data['nickname'] | default('',true) }}">
         </div>
         <div class="form-group">
