@@ -1,0 +1,13 @@
+"""
+  created by fanxl on 2018/5/27 17:33
+"""
+
+PER_PAGE = 15
+
+RECENT_BOOK_PER_PAGE = 60
+
+BEANS_EVERY_DRIFT = 1
+
+BEANS_UPLOAD_ONE_BOOK = 0.5
+
+RECENT_BOOK_COUNT = 30
