@@ -6,9 +6,11 @@
 """
 __author__ = 'fanxl12'
 
+from flask import render_template
+
 from . import web
 
 
 @web.route('/')
 def index():
-    return 'hello, world!'
+    return render_template('test.html', username='王五')
