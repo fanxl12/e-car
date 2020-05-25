@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block content %}
-    <h1>您好, {{username}}</h1>
+    <h1>您好,
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('web.user_center') }}">{{ current_user.nickname }}</a>
+        {% else %}
+            <a href="{{ url_for('web.login') }}">请登录</a>
+        {% endif %}
+    </h1>
     <img src="{{ url_for('static', filename='11.jpg') }}" style="width: 1000px">
 {% endblock %}

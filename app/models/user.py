@@ -6,13 +6,15 @@
 """
 __author__ = 'fanxl12'
 
-from werkzeug.security import generate_password_hash
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
+from app import login_manager
 from app.models.base import Base
 from sqlalchemy import Column, Integer, String, Boolean, Float
 
 
-class User(Base):
+class User(UserMixin, Base):
     id = Column(Integer, primary_key=True)
     nickname = Column(String(24), nullable=False, comment='昵称')
     phone_number = Column(String(18), unique=True, comment='手机号码')
@@ -31,3 +33,13 @@ class User(Base):
     @password.setter
     def password(self, raw):
         self._password = generate_password_hash(raw)
+
+    def check_password(self, raw):
+        if not self._password:
+            return False
+        return check_password_hash(self._password, raw)
+
+
+@login_manager.user_loader
+def get_user(uid):
+    return User.query.get(int(uid))

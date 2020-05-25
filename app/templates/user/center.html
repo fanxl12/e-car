@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>个人中心</title>
+{% endblock %}
+
+{% block content %}
+    <h1>个人中心</h1>
+    <a style="margin-left: 40px;" href="{{ url_for('web.logout') }}">注销</a>
+{% endblock %}

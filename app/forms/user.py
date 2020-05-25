@@ -41,3 +41,8 @@ class RegisterForm(EmailForm):
         """
         if User.query.filter_by(nickname=field.data).first():
             raise ValidationError('昵称已存在')
+
+
+class LoginForm(EmailForm):
+    password = PasswordField('密码', validators=[
+        DataRequired(message='密码不可以为空，请输入你的密码')])
