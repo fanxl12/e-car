@@ -6,8 +6,6 @@
 """
 __author__ = 'fanxl12'
 
-from flask import request
-from wtforms import Form
 from wtforms.validators import DataRequired as WTFDataRrequired
 
 
@@ -23,17 +21,3 @@ class DataRequired(WTFDataRrequired):
             field_text = field.label.text
             self.message = field_text + '不能为空，请填写' + field_text
         super(DataRequired, self).__call__(form, field)
-
-
-class BaseForm(Form):
-    def __init__(self):
-        body_data = request.form.to_dict()
-        query_data = request.args.to_dict()
-        super(BaseForm, self).__init__(**body_data, **query_data)
-
-    def validate(self):
-        passed = super(BaseForm, self).validate()
-        if passed:
-            return True
-        else:
-            pass
