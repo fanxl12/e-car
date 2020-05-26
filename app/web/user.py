@@ -7,10 +7,11 @@
 __author__ = 'fanxl12'
 
 from flask import request, render_template, redirect, url_for, flash
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 
 from . import web
-from ..forms.user import RegisterForm, LoginForm, EmailForm
+from ..forms.user import RegisterForm, LoginForm, EmailForm, ResetPasswordForm
+from ..libs.email import send_email
 from ..models.base import db
 from ..models.user import User
 
@@ -56,6 +57,9 @@ def forget_password_request():
         account_email = form.email.data
         user = User.query.filter_by(email=account_email).first()
         if user:
+            send_email(form.email.data, '重置你的密码',
+                       'email/reset_password', user=user,
+                       token=user.generate_token())
             flash('一封邮件已发送到邮箱' + account_email + '，请及时查收')
             return redirect(url_for('web.login'))
         else:
@@ -68,3 +72,18 @@ def forget_password_request():
 def logout():
     logout_user()
     return redirect('/')
+
+
+@web.route('/reset/password/<token>', methods=['GET', 'POST'])
+def forget_password(token):
+    if not current_user.is_anonymous:
+        return redirect('/')
+    form = ResetPasswordForm(request.form)
+    if request.method == 'POST' and form.validate():
+        result = User.reset_password(token, form.password1.data)
+        if result:
+            flash('你的密码已更新,请使用新密码登录')
+            return redirect(url_for('web.login'))
+        else:
+            return redirect('/')
+    return render_template('user/forget_password.html')

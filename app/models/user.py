@@ -6,11 +6,13 @@
 """
 __author__ = 'fanxl12'
 
+from flask import current_app
 from flask_login import UserMixin
+from itsdangerous import Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import login_manager
-from app.models.base import Base
+from app.models.base import Base, db
 from sqlalchemy import Column, Integer, String, Boolean, Float
 
 
@@ -38,6 +40,24 @@ class User(UserMixin, Base):
         if not self._password:
             return False
         return check_password_hash(self._password, raw)
+
+    def generate_token(self, expiration=600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def reset_password(token, new_password):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except Exception as e:
+            return False
+        user = User.query.get(data.get('id'))
+        if user is None:
+            return False
+        user.password = new_password
+        db.session.commit()
+        return True
 
 
 @login_manager.user_loader
