@@ -10,7 +10,7 @@ from flask import request, render_template, redirect, url_for, flash
 from flask_login import login_required, login_user, logout_user
 
 from . import web
-from ..forms.user import RegisterForm, LoginForm
+from ..forms.user import RegisterForm, LoginForm, EmailForm
 from ..models.base import db
 from ..models.user import User
 
@@ -49,9 +49,18 @@ def user_center():
     return render_template('user/center.html')
 
 
-@web.route('/forget/password')
+@web.route('/forget/password', methods=['GET', 'POST'])
 def forget_password_request():
-    pass
+    form = EmailForm(request.form)
+    if request.method == 'POST' and form.validate():
+        account_email = form.email.data
+        user = User.query.filter_by(email=account_email).first()
+        if user:
+            flash('一封邮件已发送到邮箱' + account_email + '，请及时查收')
+            return redirect(url_for('web.login'))
+        else:
+            flash('邮箱不存在，请重新输入!', category='error')
+    return render_template('user/reset_password.html', form=form)
 
 
 @web.route('/logout')
