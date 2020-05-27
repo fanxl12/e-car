@@ -8,7 +8,7 @@ __author__ = 'fanxl12'
 
 from flask import current_app
 from flask_login import UserMixin
-from itsdangerous import Serializer
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import login_manager

@@ -6,12 +6,23 @@
 """
 __author__ = 'fanxl12'
 
-from flask import render_template, flash
+from flask import render_template, flash, request
 
 from . import web
+from ..forms.car import CarUrlForm
+from ..models.base import db
+from ..spider.car import CarHttp
 
 
-@web.route('/')
-def index():
-    flash('这是一个假的消息!')
-    return render_template('test.html', username='王五')
+@web.route('/car', methods=['GET', 'POST'])
+def get_car():
+    form = CarUrlForm(request.form)
+    if request.method == 'POST' and form.validate():
+        car_list = CarHttp.get_car(form.url.data)
+        if car_list:
+            with db.auto_commit():
+                db.session.add_all(car_list)
+            flash('爬取' + str(len(car_list)) + '条数据')
+    return render_template('get_car.html', form=form)
+
+
