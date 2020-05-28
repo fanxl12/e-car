@@ -17,8 +17,14 @@
         {% for item in page.items %}
             <tr>
               <th scope="row">{{loop.index + (page.page - 1) * page.per_page}}</th>
-              <td>{{ item[0] }}</td>
-              <td>{{ item[1] }}</td>
+              <td>
+                  {{ item[0] }}
+              </td>
+              <td>
+                  <a href="{{ url_for('web.car_list', brand=item[0]) }}">
+                      {{ item[1] }}
+                  </a>
+              </td>
             </tr>
         {%  endfor %}
       </tbody>

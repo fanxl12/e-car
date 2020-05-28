@@ -42,3 +42,15 @@ def brand_list():
     return render_template('car/brand.html', page=page_obj)
 
 
+@web.route('/car-list')
+def car_list():
+    page = request.args.get('page', default=1, type=int)
+    brand = request.args.get('brand', default=None, type=str)
+    if brand:
+        page_obj = Car.query.filter_by(brand=brand).order_by(Car.model)\
+            .paginate(page=page, per_page=10, error_out=False)
+    else:
+        page_obj = Car.query.order_by(Car.brand, Car.model) \
+            .paginate(page=page, per_page=10, error_out=False)
+    return render_template('car/car_list.html', page=page_obj)
+

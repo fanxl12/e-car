@@ -1,24 +1,40 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>首页</title>
+    <title>型号目录</title>
 {% endblock %}
 
 {% block content %}
+
+    <form action="" method="get" class="form-inline" style="margin-bottom: 20px">
+        <div class="form-group">
+            <input type="text" class="form-control" name="keyword" placeholder="请输入型号关键字">
+        </div>
+        <button type="submit" class="btn btn-primary">搜索</button>
+    </form>
+
     <table class="table table-bordered table-hover">
       <thead>
         <tr>
           <th>序号</th>
-          <th>名称</th>
-          <th>车型数量</th>
+          <th>品牌</th>
+          <th>型号</th>
+          <th>来源</th>
         </tr>
       </thead>
       <tbody>
         {% for item in page.items %}
             <tr>
               <th scope="row">{{loop.index + (page.page - 1) * page.per_page}}</th>
-              <td>{{ item[0] }}</td>
-              <td>{{ item[1] }}</td>
+              <td>
+                  {{ item.brand }}
+              </td>
+              <td>{{ item.model }}</td>
+              <td>
+                  <a href="{{ item.source_url }}" target="_blank">
+                      {{ item.source }}
+                  </a>
+              </td>
             </tr>
         {%  endfor %}
       </tbody>
@@ -28,7 +44,7 @@
       <ul class="pagination">
         {% if page.has_prev %}
             <li>
-              <a href="{{ url_for('web.brand_list', page=page.prev_num) }}" aria-label="上一页">
+              <a href="{{ url_for('web.car_list', page=page.prev_num) }}" aria-label="上一页">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
@@ -56,14 +72,14 @@
             {% if num == page.page %}
                 <li class="active"><a href="#">{{ num }} <span class="sr-only">(current)</span></a></li>
             {% else %}
-                <li><a href="{{ url_for('web.brand_list', page=num) }}">{{ num }}</a></li>
+                <li><a href="{{ url_for('web.car_list', page=num) }}">{{ num }}</a></li>
             {% endif %}
         {% endfor %}
 
 
         {% if page.has_next %}
           <li>
-            <a href="{{ url_for('web.brand_list', page=page.next_num) }}" aria-label="下一页">
+            <a href="{{ url_for('web.car_list', page=page.next_num) }}" aria-label="下一页">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
