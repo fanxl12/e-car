@@ -8,10 +8,12 @@ __author__ = 'fanxl12'
 
 from flask import render_template, flash, request
 from flask_login import login_required
+from sqlalchemy import func, desc
 
 from . import web
 from ..forms.car import CarUrlForm
 from ..models.base import db
+from ..models.car import Car
 from ..spider.car import CarHttp
 
 
@@ -26,5 +28,17 @@ def get_car():
                 db.session.add_all(car_list)
             flash('爬取' + str(len(car_list)) + '条数据')
     return render_template('get_car.html', form=form)
+
+
+@web.route('/brand')
+def brand_list():
+    # brand_list = db.session.query(Car.brand, func.count(Car.brand)).group_by(Car.brand).order_by(
+    #         desc(func.count(Car.brand))
+    #     ).all()
+    page = request.args.get('page', default=1, type=int)
+    page_obj = db.session.query(Car.brand, func.count(Car.brand)).group_by(Car.brand).order_by(
+        desc(func.count(Car.brand))
+    ).paginate(page=page, per_page=10, error_out=False)
+    return render_template('car/brand.html', page=page_obj)
 
 
