@@ -5,6 +5,9 @@
 @time: create by fanxl12 on 2020-05-26
 """
 __author__ = 'fanxl12'
+
+import re
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -28,6 +31,11 @@ def get_html(url):
 
 def analysis_html(html):
     soup = BeautifulSoup(html, "html.parser")
+    article_div = soup.find('div', class_='article')
+    title = article_div.find('h2')
+    time_element = soup.find('i', class_='icon-clock').next_sibling
+    CarHttp.time = time_element.string.strip()
+    CarHttp.source = get_value(title)
     for thead in soup.find_all('thead'):
         td_array = thead.find_all('td')
         for tbody in soup.find_all('tbody'):
@@ -40,9 +48,13 @@ def analysis_html(html):
 
 
 class CarHttp:
+    URL = ''
+    source = ''
+    time = ''
 
     @staticmethod
     def get_car(url):
+        CarHttp.URL = url
         html = get_html(url)
         return analysis_html(html)
 
@@ -168,6 +180,11 @@ def add_car(item, car_list):
     model_list = model_str.split('::')
     for model in model_list:
         car = Car()
+        car.source_url = CarHttp.URL
+        source = CarHttp.source
+        r = re.compile(r'[（](.*)[）]', re.S)
+        car.source = re.findall(r, source)[0]
+        car.release_time = CarHttp.time
         car.brand = item['brand']
         car.model = model
         car.producer = item['producer']

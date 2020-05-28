@@ -7,6 +7,7 @@
 __author__ = 'fanxl12'
 
 from flask import render_template, flash, request
+from flask_login import login_required
 
 from . import web
 from ..forms.car import CarUrlForm
@@ -15,6 +16,7 @@ from ..spider.car import CarHttp
 
 
 @web.route('/car', methods=['GET', 'POST'])
+@login_required
 def get_car():
     form = CarUrlForm(request.form)
     if request.method == 'POST' and form.validate():
