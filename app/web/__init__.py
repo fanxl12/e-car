@@ -21,3 +21,4 @@ def not_found(e):
 from app.web import car
 from app.web import user
 from app.web import index
+from app.web import chart

@@ -15,6 +15,7 @@ flask-login = "*"
 flask-mail = "*"
 requests = "*"
 beautifulsoup4 = "*"
+pyecharts = "*"
 
 [requires]
 python_version = "3.6"
