@@ -8,7 +8,7 @@ __author__ = 'fanxl12'
 
 from flask import render_template, flash, request
 from flask_login import login_required
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, text
 
 from . import web
 from ..forms.car import CarUrlForm
@@ -46,11 +46,17 @@ def brand_list():
 def car_list():
     page = request.args.get('page', default=1, type=int)
     brand = request.args.get('brand', default=None, type=str)
+    keyword = request.args.get('keyword', default=None, type=str)
     if brand:
-        page_obj = Car.query.filter_by(brand=brand).order_by(Car.model)\
+        page_obj = Car.query.filter_by(brand=brand)\
+            .filter(Car.model.like("%" + keyword + "%") if keyword is not None else text(""))\
+            .order_by(Car.model)\
             .paginate(page=page, per_page=10, error_out=False)
     else:
-        page_obj = Car.query.order_by(Car.brand, Car.model) \
+        page_obj = Car.query.filter(Car.model.like("%" + keyword + "%") if keyword is not None else text(""))\
+            .order_by(Car.brand, Car.model) \
             .paginate(page=page, per_page=10, error_out=False)
-    return render_template('car/car_list.html', page=page_obj)
+    if keyword:
+        flash('查询到' + str(page_obj.total) + '条结果')
+    return render_template('car/car_list.html', page=page_obj, keyword=keyword, brand=brand)
 
