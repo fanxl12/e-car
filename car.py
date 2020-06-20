@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 """
-@file: app.py
+@file: car.py
 @time: create by fanxl12 on 2020-05-24
 """
 __author__ = 'fanxl12'
