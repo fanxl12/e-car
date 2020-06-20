@@ -12,6 +12,6 @@
             <a href="{{ url_for('web.login') }}">请登录</a>
         {% endif %}
     </h1>
-    <h2>共收录{{ car.brand_count }}个品牌， {{ car.model_count }}款电动车</h2>
+    <h2>武汉新国标目录共收录<a href="{{ url_for('web.brand_list') }}">{{ car.brand_count }}</a>个品牌， <a href="{{ url_for('web.car_list') }}">{{ car.model_count }}</a>款电动车</h2>
     <img src="{{ url_for('static', filename='11.jpg') }}" style="width: 1000px">
 {% endblock %}
